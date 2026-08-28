@@ -12,8 +12,14 @@ final class CadenceAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
         CadenceWindowSpace.pinVisibleChrome()
-        CadenceWindowSpace.revealStudio()
+        let onboardingDone = UserDefaults.standard.bool(forKey: AppSettings.onboardingDefaultsKey)
+        let studioVisible = NSApp.windows.contains { window in
+            window.title == "Cadence" && window.isVisible && window.frame.height >= 40
+        }
+        if onboardingDone && studioVisible == false {
+            CadenceWindowSpace.revealStudio()
+        }
     }
 }

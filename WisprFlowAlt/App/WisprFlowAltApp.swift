@@ -23,15 +23,6 @@ struct WisprFlowAltApp: App {
         .defaultLaunchBehavior(UserDefaults.standard.bool(forKey: AppSettings.onboardingDefaultsKey) ? .presented : .suppressed)
         .restorationBehavior(.disabled)
 
-        MenuBarExtra {
-            MenuBarView()
-                .environment(appModel)
-                .modelContainer(appModel.modelContainer)
-        } label: {
-            MenuBarLabel(state: appModel.session.state)
-        }
-        .menuBarExtraStyle(.menu)
-
         Settings {
             SettingsView()
                 .environment(appModel)

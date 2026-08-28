@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CadenceStudioView: View {
     @Environment(AppModel.self) private var appModel
+    @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
     @State private var pulse = false
 
@@ -89,8 +90,10 @@ struct CadenceStudioView: View {
             }
         }
         .onAppear {
+            CadenceOpeners.openWindow = openWindow
+            CadenceOpeners.openSettings = openSettings
             appModel.bootstrapIfNeeded()
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             CadenceWindowSpace.pinVisibleChrome()
             appModel.permissions.refresh()
             withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {

@@ -32,19 +32,36 @@ enum CadenceWindowSpace {
         if window.isVisible && window.isOnActiveSpace == false {
             window.orderFrontRegardless()
         }
-        publishAccessibleWindows()
     }
 
     static func pinVisibleChrome() {
+        var seen = Set<ObjectIdentifier>()
         for window in NSApp.windows {
+            let id = ObjectIdentifier(window)
+            if seen.contains(id) { continue }
+            seen.insert(id)
             if window.styleMask.contains(.titled) && window.frame.height >= 40 && window.title.hasPrefix("Item-") == false {
                 CadenceLog.debug(
-                    "Window title=\(window.title) class=\(type(of: window)) canKey=\(window.canBecomeKey) canMain=\(window.canBecomeMain) key=\(window.isKeyWindow) main=\(window.isMainWindow) ignoresMouse=\(window.ignoresMouseEvents) size=\(Int(window.frame.width))x\(Int(window.frame.height))"
+                    "Window id=\(ObjectIdentifier(window)) title=\(window.title) class=\(type(of: window)) canKey=\(window.canBecomeKey) visible=\(window.isVisible) size=\(Int(window.frame.width))x\(Int(window.frame.height))"
                 )
             }
             pinChromeIfNeeded(window)
         }
-        publishAccessibleWindows()
+        collapseDuplicateStudioWindows()
+    }
+
+    private static func collapseDuplicateStudioWindows() {
+        let studios = NSApp.windows.filter { window in
+            window.title == "Cadence"
+                && window.styleMask.contains(.titled)
+                && window.frame.height >= 40
+                && window.isVisible
+        }
+        guard studios.count > 1 else { return }
+        CadenceLog.debug("Closing \(studios.count - 1) extra Studio window(s)")
+        for window in studios.dropFirst() {
+            window.close()
+        }
     }
 
     static func revealStudio() {
@@ -59,35 +76,11 @@ enum CadenceWindowSpace {
         }
     }
 
-    private static func publishAccessibleWindows() {
-        let chrome = NSApp.windows.filter { window in
-            window.styleMask.contains(.titled)
-                && window.frame.height >= 40
-                && window.title.hasPrefix("Item-") == false
-                && window.ignoresMouseEvents == false
-                && window.isVisible
-        }
-        for window in chrome {
-            window.setAccessibilityParent(NSApp)
-        }
-        NSApp.setAccessibilityWindows(chrome)
-        NSApp.setAccessibilityMainWindow(chrome.first)
-        CadenceLog.debug(
-            "AX publish chrome=\(chrome.count) titles=\(chrome.map(\.title).joined(separator: ",")) appWindows=\(NSApp.accessibilityWindows()?.count ?? -1)"
-        )
-    }
-
     private static func prepareChrome(_ window: NSWindow) {
         window.isRestorable = false
         window.hidesOnDeactivate = false
         window.ignoresMouseEvents = false
-        if window.styleMask.contains(.titled) {
-            window.setAccessibilityRole(.window)
-            window.setAccessibilitySubrole(.standardWindow)
-            if window.title.isEmpty == false {
-                window.setAccessibilityTitle(window.title)
-            }
-        }
+        window.sharingType = .readWrite
     }
 
     private static func revealWindow(matching: (NSWindow) -> Bool) {
@@ -100,9 +93,8 @@ enum CadenceWindowSpace {
         }
         window.makeKeyAndOrderFront(nil)
         window.orderFrontRegardless()
-        _ = window.makeMain()
+        window.makeMain()
         window.makeKey()
-        publishAccessibleWindows()
         CadenceLog.debug("reveal title=\(window.title) appActive=\(NSApp.isActive) canKey=\(window.canBecomeKey) key=\(window.isKeyWindow) main=\(window.isMainWindow)")
     }
 
