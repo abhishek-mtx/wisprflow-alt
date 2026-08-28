@@ -128,11 +128,7 @@ struct OnboardingView: View {
                     appModel.hotkeys.start()
                     dismiss()
                     NSApp.windows.first { $0.identifier?.rawValue == "onboarding" }?.close()
-                    openWindow(id: "studio")
-                    CadenceWindowSpace.revealStudio()
-                    DispatchQueue.main.async {
-                        CadenceWindowSpace.revealStudio()
-                    }
+                    CadenceStudioWindow.shared.present()
                 }
                 .buttonStyle(.borderedProminent)
                 .accessibilityLabel("Finish")

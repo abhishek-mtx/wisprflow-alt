@@ -11,18 +11,6 @@ struct WisprFlowAltApp: App {
     }
 
     var body: some Scene {
-        Window("Cadence", id: "studio") {
-            CadenceStudioView()
-                .environment(appModel)
-                .modelContainer(appModel.modelContainer)
-                .background(PinWindowToActiveSpace())
-        }
-        .windowResizability(.contentSize)
-        .defaultPosition(.center)
-        .windowToolbarStyle(.unified)
-        .defaultLaunchBehavior(UserDefaults.standard.bool(forKey: AppSettings.onboardingDefaultsKey) ? .presented : .suppressed)
-        .restorationBehavior(.disabled)
-
         Settings {
             SettingsView()
                 .environment(appModel)

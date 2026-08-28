@@ -73,7 +73,11 @@ struct CadenceStudioView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    openSettings()
+                    if let openSettings = CadenceOpeners.openSettings {
+                        openSettings()
+                    } else {
+                        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                    }
                 } label: {
                     Image(systemName: "gearshape")
                 }

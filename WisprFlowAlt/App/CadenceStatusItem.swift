@@ -154,17 +154,7 @@ final class CadenceStatusItem: NSObject {
     @objc private func openStudioMenu(_ sender: Any?) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate()
-        let exists = NSApp.windows.contains { window in
-            window.title == "Cadence" && window.frame.height >= 40
-        }
-        if exists {
-            CadenceWindowSpace.revealStudio()
-            return
-        }
-        CadenceOpeners.openWindow?(id: "studio")
-        DispatchQueue.main.async {
-            CadenceWindowSpace.revealStudio()
-        }
+        CadenceStudioWindow.shared.present()
     }
 
     @objc private func toggleHandsFree(_ sender: Any?) {

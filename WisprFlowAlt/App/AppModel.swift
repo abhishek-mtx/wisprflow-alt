@@ -86,6 +86,10 @@ final class AppModel {
         let localeID = settings.preferredLocaleIdentifier
         Task { await speech.prepare(localeIdentifier: localeID) }
         CadenceStatusItem.shared.install(self)
+        CadenceRuntime.appModel = self
+        if UserDefaults.standard.bool(forKey: AppSettings.onboardingDefaultsKey) {
+            CadenceStudioWindow.shared.present()
+        }
         CadenceLog.debug("Bootstrap complete hotkeysRunning=\(hotkeys.isRunning) mic=\(permissions.microphoneGranted) ax=\(permissions.accessibilityTrusted) input=\(permissions.inputMonitoringTrusted)")
     }
 
