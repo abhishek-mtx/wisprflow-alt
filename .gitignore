@@ -1,0 +1,59 @@
+# Xcode
+build/
+DerivedData/
+**/DerivedData/
+*.xcuserdata
+xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+.swiftpm/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Archives / signing / notarization
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.mobileprovision
+*.dmg
+*.xcarchive
+ExportOptions.plist
+*.p12
+*.pem
+*.p8
+*.cer
+*.der
+*.key
+AuthKey_*.p8
+notarytool-*.json
+
+# IDE
+.idea/
+*.swp
+*~
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs (Debug builds may include transcript previews)
+*.log
+Logs/
+**/cadence.debug.log
+
+# Python
+.venv/
+**/.venv/
+__pycache__/
+*.pyc
+scripts/.venv-parakeet/
+scripts/bin/
+
+# Cursor / Salesforce plugin leftovers (not Cadence)
+.sf/
