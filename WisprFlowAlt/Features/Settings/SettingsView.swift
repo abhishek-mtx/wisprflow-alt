@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
+
     var body: some View {
         TabView {
             GeneralSettingsView()
@@ -21,5 +24,9 @@ struct SettingsView: View {
                 .tabItem { Label("Injection", systemImage: "arrow.right.doc.on.clipboard") }
         }
         .padding(.top, 8)
+        .onAppear {
+            CadenceOpeners.openWindow = openWindow
+            CadenceOpeners.openSettings = openSettings
+        }
     }
 }

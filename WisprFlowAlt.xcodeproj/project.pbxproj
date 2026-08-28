@@ -46,12 +46,12 @@
 		B8DF49C7FB204F67353708DD /* CadenceGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE321B6FFEC87472DD70090 /* CadenceGlass.swift */; };
 		BFC84FB4B89F8293F06139F0 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882ACFC69B39127C542D9CE /* PermissionService.swift */; };
 		C0363890E535D626523A4514 /* CompareSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC76EF3DB58D9424CBE8BD55 /* CompareSession.swift */; };
-		C1AFF03E3ECACB07C736B99D /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F108F5DB74852A3D6877142 /* MenuBarView.swift */; };
 		C2AAB161EB50C829061321D1 /* DictationPolish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC1F9ED863F2DEC552AFBA /* DictationPolish.swift */; };
 		C4DFBED8DC27A1A0D5FA0407 /* StatsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1B7133AF8403C41C37804E /* StatsStore.swift */; };
 		C533F989CC797C464F7170B7 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D686040BF7965A8E0EB7F6CC /* SeedData.swift */; };
 		D2010C0BDBE5275DEFB0FFB0 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A6CE31A1F725150E0C1527 /* OnboardingView.swift */; };
 		D2A0D493C960E3CD8FC2D1B1 /* CompareRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260A4F4780BB7D3B9D1B2A55 /* CompareRootView.swift */; };
+		D2DF101C7CD16196545CE1D2 /* CadenceStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E63AA12384831825B81ECCB /* CadenceStatusItem.swift */; };
 		D5D5BC0D753F5C9D1C33B5B6 /* TextInjectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A0FD378A8981B31012CCF /* TextInjectionService.swift */; };
 		D6213836952B7B0679AE156A /* DictationPolish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC1F9ED863F2DEC552AFBA /* DictationPolish.swift */; };
 		D63A2A3E746F9BB316757189 /* RecentTakesStripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C3208580E842530EB2EC9 /* RecentTakesStripTests.swift */; };
@@ -98,13 +98,13 @@
 		375E6F9CB0879BD4AF508D9A /* WisprFlowAltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WisprFlowAltApp.swift; sourceTree = "<group>"; };
 		39EEDF8FF897AC4C364EEE30 /* RecentTakesStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTakesStrip.swift; sourceTree = "<group>"; };
 		3C324B3F83D76DD711CF3248 /* CadenceStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStudioView.swift; sourceTree = "<group>"; };
+		3E63AA12384831825B81ECCB /* CadenceStatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStatusItem.swift; sourceTree = "<group>"; };
 		40554CD23A0ED0FF983F688A /* FoundationModelsPolish.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelsPolish.swift; sourceTree = "<group>"; };
 		4F5578928CEA85AAC3BC8D77 /* WisprFlowAlt.debug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WisprFlowAlt.debug.entitlements; sourceTree = "<group>"; };
 		5349C4B8F41B6E47619E1756 /* CompareSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareSync.swift; sourceTree = "<group>"; };
 		53CA96EF1CEEFAACC26F7CF7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5882ACFC69B39127C542D9CE /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
 		5E26043694A8EAA6B21A6660 /* FnHoldMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FnHoldMonitor.swift; sourceTree = "<group>"; };
-		5F108F5DB74852A3D6877142 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		683FA96F7FCD6BC116C1C2BD /* parakeet_sidecar.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = parakeet_sidecar.py; sourceTree = "<group>"; };
 		6C9D3AFC50808ACE643F3B6E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		71638BC1E01F99FB3A706F32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -176,8 +176,8 @@
 				1508E48A48F3CA62B81FD147 /* AppSettings.swift */,
 				FB30C69C6CA10E2622DA0FDD /* CadenceAppDelegate.swift */,
 				9AFBBE008E247D0046592CBC /* CadenceBrand.swift */,
+				3E63AA12384831825B81ECCB /* CadenceStatusItem.swift */,
 				32364B445C016CAB3239E5BD /* CadenceWindowSpace.swift */,
-				5F108F5DB74852A3D6877142 /* MenuBarView.swift */,
 				375E6F9CB0879BD4AF508D9A /* WisprFlowAltApp.swift */,
 			);
 			path = App;
@@ -574,6 +574,7 @@
 				9CE6B2E887F0648DC71E4CED /* CadenceBrand.swift in Sources */,
 				B8DF49C7FB204F67353708DD /* CadenceGlass.swift in Sources */,
 				8B6329625545EFEB51968F21 /* CadenceLog.swift in Sources */,
+				D2DF101C7CD16196545CE1D2 /* CadenceStatusItem.swift in Sources */,
 				AD154DCDF8B1EC77FA7E5E4E /* CadenceStudioView.swift in Sources */,
 				1E6C112D0C444F16EFE0239E /* CadenceWindowSpace.swift in Sources */,
 				EB878F2004F3B2F453BB4875 /* CommandModeController.swift in Sources */,
@@ -590,7 +591,6 @@
 				713EAFABA9CCB8299AD104D8 /* HotkeySettingsView.swift in Sources */,
 				E896755C579A53889518D143 /* InjectionProfilesView.swift in Sources */,
 				B76A3130E85F8862E656173B /* KeyShortcut.swift in Sources */,
-				C1AFF03E3ECACB07C736B99D /* MenuBarView.swift in Sources */,
 				D2010C0BDBE5275DEFB0FFB0 /* OnboardingView.swift in Sources */,
 				8BC3D885AAA4FBEC4ED1804F /* OverlayHUD.swift in Sources */,
 				BFC84FB4B89F8293F06139F0 /* PermissionService.swift in Sources */,

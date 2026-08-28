@@ -17,7 +17,10 @@ struct OnboardingView: View {
             footer
         }
         .background(.background)
-        .onAppear { appModel.permissions.refresh() }
+        .onAppear {
+            CadenceOpeners.openWindow = openWindow
+            appModel.permissions.refresh()
+        }
     }
 
     private var header: some View {

@@ -85,8 +85,8 @@ final class AppModel {
         hotkeys.start()
         let localeID = settings.preferredLocaleIdentifier
         Task { await speech.prepare(localeIdentifier: localeID) }
+        CadenceStatusItem.shared.install(self)
         CadenceLog.debug("Bootstrap complete hotkeysRunning=\(hotkeys.isRunning) mic=\(permissions.microphoneGranted) ax=\(permissions.accessibilityTrusted) input=\(permissions.inputMonitoringTrusted)")
-        // Onboarding is opened from MenuBarView once the app UI exists.
     }
 
     func openOnboarding() {
