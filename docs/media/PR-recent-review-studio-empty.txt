@@ -1,0 +1,7 @@
+size=360x552 n=14
+Ready
+Recent takes
+No takes yet
+listen button present
+Hold Fn to dictate
+gear/close/zoom/minimize present

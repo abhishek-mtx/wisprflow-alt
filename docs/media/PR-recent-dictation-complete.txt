@@ -1,0 +1,4 @@
+Live Listen then Stop on /Applications/Cadence.app at 2026-08-27T23:44:31Z.
+Speech preview: Cadence dictation, complete probe, 123.
+Inject OK via clipboard into com.todesktop.230313mzl4w4u92 (Cursor was frontmost, not a no-target case).
+Log line: Dictation complete via clipboard chars=39

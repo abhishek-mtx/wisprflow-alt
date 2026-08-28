@@ -1,0 +1,4 @@
+Same CadenceProbe launch as PR-clean-im-denied-probe.txt.
+mic=false tcc=notDetermined. Menu status Microphone needed.
+Studio CG window was 324x497. AX windows were AXApplication, so Allow Microphone and the strip were not readable. Lane 8 box stays open.
+Screen Recording TCC still blocked screencapture of Cadence windows.

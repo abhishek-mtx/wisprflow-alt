@@ -1,0 +1,500 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Cadence docs preview</title>
+<style>
+body{font:15px/1.45 ui-sans-serif,system-ui;max-width:52rem;margin:0 auto;padding:1.5rem;background:#fff;color:#111}
+pre{white-space:pre-wrap;word-break:break-word;background:#f6f4ef;padding:1rem;border-radius:8px}
+h1{font-size:1.4rem;margin-top:2.5rem}
+nav a{margin-right:1rem}
+</style>
+<nav>
+<a href="#README">README</a>
+<a href="#SECURITY">SECURITY</a>
+<a href="#CONTRIBUTING">CONTRIBUTING</a>
+<a href="#ARCHITECTURE">ARCHITECTURE</a>
+<a href="#LEARNINGS">LEARNINGS</a>
+<a href="#ADR 0003">ADR 0003</a>
+</nav>
+<h1 id='README'>README</h1><pre># Cadence
+
+Cadence is on\-device dictation for **macOS 26\+**. Hold Fn, speak, release. Text lands at the caret in the app you were already in, including Electron apps such as Cursor.
+
+Speech stays on this Mac. Apple `SpeechAnalyzer` / `SpeechTranscriber` do the recognition. Optional polish uses Apple Intelligence / Foundation Models on\-device. History is local SwiftData. There is no Cadence cloud STT, no audio upload, and no Cadence account.
+
+Bundle ID: `com.cadence.dictation`.
+
+## Why this exists
+
+Cadence was built as a **local\-only** Wispr Flow alternative. Same global push\-to\-talk habit. Audio does not go to a vendor.
+
+### Wispr Flow
+
+Wispr Flow is a strong product if cloud or vendor STT is acceptable. On healthcare and corporate machines it often is not. Audio leaves the Mac. That is a data\-control problem even when the vendor is reputable. Cadence is the control\-your\-audio alternative. Recognition and optional polish run on\-device. Cadence does not operate a speech cloud and does not create a Cadence account.
+
+### Apple system dictation and per\-app mics
+
+macOS dictation, and the microphone control inside Notes, Slack, Cursor, and similar, is per\-app. It is not global push\-to\-talk. There is no unified overlay, no Cadence\-style custom dictionary, no on\-device polish pipeline like Cadence, and a weaker story for injecting into Electron. Switch apps and you start over. Cadence is a system\-wide dictation injector. One Fn hold, one Flow Bar, paste into whatever was focused.
+
+### What "local" actually means
+
+The microphone hears you. If you grant Accessibility, Cadence can insert text into other apps. That is the product, not a side effect. Cadence is **not** HIPAA certified and does not claim to be. If the rule is "no process on this Mac may hear or type," do not run dictation software.
+
+## What stays on this Mac
+
+| Data | Where it goes |
+|:-----|:--------------|
+| Microphone audio | On\-device `SpeechAnalyzer` / `SpeechTranscriber` only. Not uploaded to a Cadence server. |
+| Optional polish | Apple Intelligence / Foundation Models on\-device, when available. |
+| History, dictionary, snippets, styles | Local SwiftData store `WisprFlowAlt`. |
+| Debug logs | `~/Library/Logs/Cadence/cadence.debug.log`. Debug builds may include transcript previews. Release builds log counts and errors, not transcript text. |
+
+Compare Lab can send a clip to Wispr Flow **if you paste a Wispr API key**. That is an opt\-in comparison tool. Cadence itself never does that.
+
+## Features
+
+* Global **Fn** push\-to\-talk (listen\-only event tap, so Wispr Flow can share the same key)
+* Floating Flow Bar overlay while you talk, including over fullscreen Electron
+* Custom dictionary with whole\-phrase matching (so `ai` does not rewrite `said`)
+* Optional on\-device polish, per\-app styles, snippets, and transforms
+* Clipboard / Accessibility injection aimed at Electron (Cursor, VS Code, Slack)
+* Command Mode (`⌘⌃C`) to rewrite selected text from a spoken instruction
+* Local history in Settings
+* Compare Lab sibling app for side\-by\-side Cadence / Parakeet / Wispr transcripts. Cadence never uploads audio. Compare Lab can call Wispr only if you paste a key.
+
+## Requirements
+
+* macOS 26.0 or later (SpeechAnalyzer / SpeechTranscriber)
+* Xcode 26\+
+* [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
+* Apple Intelligence is optional. Polish falls back to light cleanup when it is unavailable.
+
+First speech use may download on\-device speech assets. Run once while online if the Mac is usually offline.
+
+## Local Debug build
+
+Ad\-hoc signing (`CODE_SIGN_IDENTITY: "-"`) gives every rebuild a new code directory hash. Accessibility and Input Monitoring then die silently. Debug builds use the stable self\-signed identity **Cadence Local Dev**.
+
+```bash
+./scripts/setup-signing.sh
+xcodegen generate
+open WisprFlowAlt.xcodeproj
+```
+
+Scheme **Cadence**, destination **My Mac**. Copy `Cadence.app` to `/Applications` and launch that copy so TCC binds to a stable path. Grant Microphone, Accessibility, and Input Monitoring once. Rebuilds that keep the same identity keep those grants.
+
+Details: [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md), [docs/LEARNINGS.md](docs/LEARNINGS.md).
+
+### Shortcuts
+
+| Action | Default |
+|:-------|:--------|
+| Push\-to\-talk | Hold **Fn** |
+| Hands\-free | Off by default. Optional double\-tap Fn in Settings → Hotkeys |
+| Command Mode | Hold `⌘⌃C` |
+| Cancel | `Esc` |
+
+Presets for Option (`⌥`) and `⌃Space` live in Settings → Hotkeys.
+
+## Permissions
+
+| Permission | Why |
+|:-----------|:----|
+| Microphone | Capture speech for on\-device transcription |
+| Input Monitoring | See Fn (and other hotkeys) while another app is focused |
+| Accessibility | Insert or synthesize paste into the target app. Without it, text is copied and you press `⌘V` yourself. |
+
+Cadence is **not** sandboxed. Global event taps and Accessibility injection need the sandbox off. It cannot ship on the Mac App Store. Share a notarized Developer ID DMG, not a Debug copy from DerivedData. See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md).
+
+## Compare Lab
+
+Sibling target `com.cadence.compare`, Xcode scheme **Compare**, product name Compare.
+
+Hold Fn once. Cadence transcribes live (and skips paste while Compare is in session). Compare also runs local Parakeet (MLX sidecar) and, optionally, Wispr Flow (desktop clipboard or cloud API key). Use it to judge quality. Do not treat the Wispr column as part of Cadence's privacy story.
+
+## Tests
+
+```bash
+xcodegen generate
+xcodebuild test -scheme Cadence -destination 'platform=macOS'
+```
+
+## Docs
+
+* [Architecture](docs/ARCHITECTURE.md)
+* [Production lessons](docs/LEARNINGS.md)
+* [Distribution and team sharing](docs/DISTRIBUTION.md)
+* [Security and privacy](SECURITY.md)
+* [Contributing](CONTRIBUTING.md)
+* [ADR 0001: local on\-device dictation](docs/adr/0001-local-on-device-dictation.md)
+* [ADR 0002: no sandbox, Hardened Runtime](docs/adr/0002-no-sandbox-hardened-runtime.md)
+* [ADR 0003: stable local signing for TCC](docs/adr/0003-stable-local-signing-for-tcc.md)
+* [ADR 0004: live SpeechAnalyzer](docs/adr/0004-speechanalyzer-live-mic.md)
+</pre>
+<h1 id='SECURITY'>SECURITY</h1><pre># Security and privacy
+
+Cadence is a local productivity tool. It can hear the microphone. If you allow Accessibility, it can type into other apps. Treat those grants as real.
+
+Cadence is **not** HIPAA certified. On\-device recognition is not the same as a compliance program.
+
+## Local\-only dictation
+
+Cadence (`com.cadence.dictation`) does not run a speech cloud, does not upload audio, and does not create a Cadence account.
+
+| Data | Handling |
+|:-----|:---------|
+| Microphone audio | Transcribed on this Mac with Apple `SpeechAnalyzer` / `SpeechTranscriber`. |
+| Optional rewrite | Apple Intelligence / Foundation Models on\-device when available. Otherwise light local cleanup. |
+| History, dictionary, snippets, styles, injection profiles | SwiftData on disk (`WisprFlowAlt`). |
+| Release logs | Counts and errors in `~/Library/Logs/Cadence/cadence.debug.log`. Not transcript text. |
+| Debug logs | May include short transcript previews. Do not attach them to public issues. |
+
+Compare Lab (`com.cadence.compare`) is a separate app. If you paste a Wispr Flow API key, **that** column uploads the recorded clip to Wispr's API. Cadence's own dictation path never does this.
+
+## Permissions
+
+These are TCC prompts, not sandbox entitlements.
+
+| Permission | Why |
+|:-----------|:----|
+| Microphone | Capture speech |
+| Input Monitoring | Global push\-to\-talk (default **Fn**) while another app is focused |
+| Accessibility | Insert text or post synthetic `⌘V`. Without it, Cadence copies the transcript and you paste by hand. |
+
+`PermissionService` treats microphone \+ Input Monitoring as required to listen. Accessibility is required to auto\-insert. Settings can show a toggle ON for an older binary. Trust `AXIsProcessTrusted()` and `AVCaptureDevice.authorizationStatus`, not the Settings row alone.
+
+Compare Lab and Cadence talk over `DistributedNotificationCenter` (`CompareSync`). Cadence posts `com.cadence.dictation.transcriptReady` with the transcript text so Compare can fill its Cadence column. Compare posts `sessionBegan` / `sessionEnded` so Cadence transcribes without inserting. That channel stays on\-machine. It is not an audio upload.
+
+## Entitlements and sandbox
+
+Both Cadence and Compare request only:
+
+```xml
+&lt;key>com.apple.security.device.audio-input&lt;/key>
+&lt;true/>
+```
+
+| Build flag | Value | Why |
+|:-----------|:------|:----|
+| `ENABLE_APP_SANDBOX` | `NO` | Event taps and Accessibility injection do not work in the App Sandbox. |
+| `ENABLE_HARDENED_RUNTIME` | `YES` | Required for Developer ID. Without `audio-input`, Settings can show Microphone ON while the process stays `.notDetermined`. |
+| `LSUIElement` | `false` | Cadence is a normal app (Dock \+ menu bar extra), not a faceless agent. |
+
+Do not add sandbox entitlements. Cadence cannot ship on the Mac App Store while the sandbox is off.
+
+Xcode Debug builds also get `com.apple.security.get-task-allow`. That is the debugger, not the entitlements file. Release archives from `scripts/notarize.sh` should not include it.
+
+## Signing
+
+TCC binds Accessibility and Input Monitoring to the **code signature**, not the bundle ID alone.
+
+* Local Debug: self\-signed identity `Cadence Local Dev` (`scripts/setup-signing.sh`). Same leaf → grants survive rebuilds.
+* Team install: notarized Developer ID Application. Not an ad\-hoc DerivedData copy.
+
+Do not share login keychain certs, `.p12` files, notary passwords, or TCC databases. See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) and [docs/LEARNINGS.md](docs/LEARNINGS.md).
+
+## Reporting issues
+
+Message the maintainer or open a private issue. Do not attach Debug logs if they may contain transcript previews. Do not paste API keys, notary credentials, or signing material.
+</pre>
+<h1 id='CONTRIBUTING'>CONTRIBUTING</h1><pre># Contributing
+
+Cadence is local\-only dictation. Do not add a cloud STT path, an audio upload, or a Cadence account.
+
+## Build
+
+```bash
+./scripts/setup-signing.sh
+xcodegen generate
+open WisprFlowAlt.xcodeproj
+```
+
+Scheme **Cadence**, destination **My Mac**. Target name is still `WisprFlowAlt`; the product is Cadence (`com.cadence.dictation`). Compare Lab is a sibling quality tool on scheme **Compare** (`com.cadence.compare`). It is not the product dictation path.
+
+`project.yml` is the source of truth. After you change it, run `xcodegen generate` again.
+
+Install the Debug app at `/Applications/Cadence.app` so TCC binds to a stable path. Grant Microphone, Accessibility, and Input Monitoring once. Rebuilds that keep **Cadence Local Dev** keep those grants.
+
+## Do not
+
+* `tccutil reset` Accessibility or Input Monitoring. It deletes the grant the user just gave.
+* Switch Debug back to ad\-hoc signing (`CODE_SIGN_IDENTITY: "-"`). Grants will die every rebuild.
+* Enable `ENABLE_DEBUG_DYLIB`. The local cert has no Team ID.
+* Commit `DerivedData`, `.p12`, `.pem`, `.env`, notary passwords, or `~/Library/Logs/Cadence` logs.
+* Share a Debug DerivedData build as the team install. Use a notarized DMG. See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md).
+* Log "Inject OK" unless `AXIsProcessTrusted()` is true.
+
+## Tests
+
+```bash
+xcodegen generate
+xcodebuild test -scheme Cadence -destination 'platform=macOS'
+```
+
+Read [docs/LEARNINGS.md](docs/LEARNINGS.md) before touching signing, the event tap, the Flow Bar, injection, or `SpeechEngine`.
+</pre>
+<h1 id='ARCHITECTURE'>ARCHITECTURE</h1><pre># Architecture
+
+Cadence is a local\-only macOS 26 dictation injector. Hold Fn, capture audio, transcribe on\-device, polish on\-device, paste into the last real app. Nothing in the dictation path talks to a Cadence server.
+
+Compare Lab (`com.cadence.compare`) is a sibling target that can call Wispr's cloud API **if the user pastes a key**. That is not Cadence's runtime.
+
+## Layers
+
+`AppModel` is the composition root. It owns SwiftData, wires services, seeds defaults, and starts the hotkey tap.
+
+| Layer | Types | Role |
+|:------|:------|:-----|
+| App | `WisprFlowAltApp`, `AppModel`, `AppSettings`, `CadenceStudioView`, `MenuBarView`, `OnboardingView` | Windows, menu bar extra, settings, UserDefaults |
+| Dictation | `DictationSessionController`, `CommandModeController` | Session state machines (record → finalize → polish → inject, or rewrite selection) |
+| Speech | `SpeechEngine`, `AudioCaptureSession`, `AnalyzerBufferConverter` | Live `SpeechAnalyzer` \+ `SpeechTranscriber` (`.progressiveTranscription`) |
+| Hotkeys | `GlobalHotkeyService`, `KeyShortcut` | Listen\-only `CGEvent` tap \+ `NSEvent` fallback |
+| Injection | `TextInjectionService`, `InjectionProfile` | Remember target app; AX / clipboard / key\-event insert |
+| Permissions | `PermissionService` | Mic, Accessibility, Input Monitoring; never `tccutil reset` |
+| HUD | `OverlayHUDController`, `FlowBarCanvas` | AppKit `NSPanel` Flow Bar over Electron |
+| Polish | `PostProcessPipeline`, `FoundationModelsPolish`, `TextNormalizer` | Dictionary, snippets, Apple Intelligence, transforms |
+| Models | `DataModels`, `SeedData`, `CorporateAIDictionary`, `StatsStore` | SwiftData \+ corporate/AI seed dictionary |
+| Shared | `CompareSync`, `TranscriptStitcher`, `DictationPolish` | Cadence ↔ Compare notifications; revision stitching |
+| Compare Lab | `CompareSession`, `AppleEngine`, `ParakeetEngine`, `WisprEngine`, `ClipRecorder`, `FnHoldMonitor` | Side\-by\-side quality tool |
+
+## Data flow (push\-to\-talk)
+
+1. User holds **Fn** (default `KeyShortcut.defaultPushToTalk`, key code 63).
+2. `GlobalHotkeyService` sees `flagsChanged` on a dedicated tap thread (or the `NSEvent` fallback). It posts `cadencePushToTalkBegan` without swallowing the key, so Wispr Flow can bind Fn too.
+3. `DictationSessionController.beginPushToTalk()` calls `TextInjectionService.rememberTargetApp()` **before** the HUD appears, so Studio or the Flow Bar does not become the paste target.
+4. If Settings → HUD is on, `OverlayHUDController` shows the Flow Bar.
+5. `SpeechEngine.start` builds `SpeechTranscriber`, then `try await analyzer.start(inputSequence:)`, **then** starts `AVAudioEngine` and attaches the converter. `AVAudioConverter.primeMethod = .none`.
+6. Volatile results replace the in\-flight guess. Final segments append. The HUD pumps `partialTranscript`.
+7. User releases Fn → `stopAndFinalize()` (`finalizeAndFinishThroughEndOfInput`, wait until the transcript is stable).
+8. `PostProcessPipeline.run`: `TextNormalizer.normalize` (spoken "comma" / "period"), whole\-phrase dictionary, snippets, optional `FoundationModelsPolish`, then any per\-app `TransformRule`.
+9. If Compare posted `sessionBegan`, Cadence skips insert and publishes the text via `CompareSync`.
+10. Otherwise `TextInjectionService.insert` runs. Accessibility must be trusted or Cadence copies to the pasteboard and tells the user to press `⌘V`. Electron\-like bundle IDs prefer clipboard paste, one `⌘V` path, not pid \+ HID together.
+11. A `TranscriptRecord` is stored in SwiftData. `StatsStore` counts words.
+
+Cancel (`Esc`) tears down speech and hides the HUD without injecting.
+
+Command Mode (`⌘⌃C`) captures selected text (or the last transcript), records a spoken instruction, asks Foundation Models to rewrite, and inserts with `replaceSelection: true`.
+
+## Speech
+
+Live dictation does **not** write a WAV and run file STT. That path exists in Compare (`AppleEngine`) and `scripts/apple_speech_transcribe.swift` as a fallback and a CLI.
+
+### Live path details
+
+* `SpeechTranscriber.isAvailable` is a hard gate (macOS 26).
+* `AssetInventory` may download locale assets on first use. `SpeechEngine.prepare` warms them at bootstrap so the first Fn is not a download.
+* Analyzer starts before mic buffers. Feeding first drops audio or races the stream.
+* `primeMethod = .none` or the converter introduces junk at the head of the stream.
+* Do not reset `AudioMeterStore` until the session actually ends. `cancel()` and `hud.hide()` reset. Finalize does not reset early, or the Flow Bar dies while you are still talking.
+* Compare's file engine uses `TranscriptStitcher.absorbRevision` so growing hypotheses are not concatenated into duplicates.
+
+Dictionary entries are loaded when a take starts (`SpeechEngine.setCustomDictionaryPhrases`). The live transcriber does not currently consume that list. Replacements still run in `PostProcessPipeline` via whole\-phrase `\b` matching in `TextNormalizer`, and polish receives the written forms as spelling hints.
+
+## Hotkeys
+
+`GlobalHotkeyService` creates a session tap, `listenOnly`, `headInsertEventTap`, on thread `com.cadence.hotkey-tap`. The main run loop lost the tap to `tapDisabledByTimeout` (SwiftUI \+ speech \+ polish). A 2s watchdog re\-enables a dead tap. `NSEvent.addGlobalMonitorForEvents` is the backup. `isPTTDown` de\-duplicates when both fire.
+
+Double\-tap hands\-free defaults **off**. Fn `flagsChanged` often looks like a double\-tap and left people stuck in hands\-free while they thought PTT was broken.
+
+## Injection
+
+`TextInjectionService` tracks the last non\-Cadence, non\-system frontmost app (`NSWorkspace.didActivateApplicationNotification`). Ignored: Notification Center, loginwindow, Spotlight, Dock, Finder, WebKit helpers, Cadence, Compare.
+
+Without `AXIsProcessTrusted()`, synthetic `⌘V` is discarded. Cadence must not log "Inject OK" in that state. It copies the text and returns `.failed`.
+
+With Accessibility, auto order is clipboard → accessibility → key events (Electron still prefers clipboard). `postCommandV` posts **either** the HID tap (when the target is frontmost, which Electron actually reads) **or** `postToPid`, never both.
+
+Wait for leftover modifiers after releasing Fn so Option/Fn does not turn `⌘V` into a chord.
+
+## Window and HUD
+
+`LSUIElement` is `false`. Cadence has a Dock icon, a Studio window (`CadenceStudioView`), a menu bar extra, Settings (tabs: General, Hotkeys, Dictionary, Styles, Snippets, Transforms, History, Injection), and an onboarding window.
+
+The Flow Bar is a borderless nonactivating `NSPanel`, mouse\-transparent, `canJoinAllSpaces` \+ `fullScreenAuxiliary`. Set `isFloatingPanel = true` first, then raise the level to `assistiveTechHighWindow` plus one. `isFloatingPanel` resets the level to 3 (`.floating`), which sits under fullscreen Electron.
+
+## Permissions model
+
+| Check | API | Required for |
+|:------|:----|:-------------|
+| Microphone | `AVCaptureDevice.authorizationStatus(for: .audio)` | Recording |
+| Input Monitoring | `CGPreflightListenEventAccess()` / `CGRequestListenEventAccess()` | Global Fn |
+| Accessibility | `AXIsProcessTrusted()` / `AXIsProcessTrustedWithOptions` | Auto\-insert |
+
+`allRequiredGranted` is mic **and** Input Monitoring. You can listen without Accessibility. You cannot auto\-paste without it.
+
+TCC is bound to the code signature. See [LEARNINGS.md](LEARNINGS.md) and [DISTRIBUTION.md](DISTRIBUTION.md). Hardened Runtime without `com.apple.security.device.audio-input` made Settings show Microphone ON while status stayed `.notDetermined`.
+
+## SwiftData
+
+Schema owned by `AppModel`:
+
+| Model | Purpose |
+|:------|:--------|
+| `DictionaryEntry` | Spoken phrase → written form |
+| `StyleProfile` / `AppStyleMapping` | Per\-app polish prompt (Casual / Formal / Technical defaults) |
+| `SnippetEntry` | Trigger → expansion |
+| `TransformRule` | Per\-app title case / upper / lower / trim |
+| `TranscriptRecord` | Raw \+ polished history |
+| `InjectionProfile` | Per\-bundle insert strategy |
+
+`SeedData.ensureDefaults` installs styles, Terminal/iTerm/Cursor/VS Code injection profiles, and `CorporateAIDictionary` (seed version 2, idempotent per phrase).
+
+Settings (`AppSettings`) live in UserDefaults: polish on by default, inject polished text, HUD on, locale, PTT (migrated to Fn), Command Mode, hands\-free off.
+
+## Polish
+
+If Apple Intelligence is available, `LanguageModelSession` cleans filler, punctuation, and mid\-sentence corrections. It is instructed not to invent periods before "I" or after "and/or/but". Dictionary replacements are passed as preferred spellings.
+
+If the model is unavailable, `SpokenTextCleanup.minimal` strips uh/um and obvious repeats. It does not invent sentence breaks at capital letters.
+
+Polish is optional (`settings.polishEnabled`). History still stores raw and polished.
+
+## Compare Lab
+
+`CompareSession` records one WAV (`ClipRecorder`), posts `CompareSync.sessionBegan` so Cadence transcribes without injecting, and fills three columns:
+
+* Cadence: live transcript via distributed notification, else `AppleEngine` file STT
+* Parakeet: local `mlx-community/parakeet-tdt-0.6b-v2` sidecar (`scripts/.venv-parakeet`)
+* Wispr Flow: desktop clipboard, or REST upload if `WISPR_FLOW_API_KEY` / UserDefaults key is set
+
+File STT and the Wispr column stay in Compare Lab. They are not on Cadence's paste path. That last column is cloud. Keep it out of Cadence's local\-only claim.
+</pre>
+<h1 id='LEARNINGS'>LEARNINGS</h1><pre># Production lessons
+
+These are mistakes Cadence already paid for. Read them before changing signing, TCC, the event tap, the HUD, injection, or live speech.
+
+Cadence is local\-only dictation. The microphone hears you. Accessibility types into other apps. None of the lessons below are an excuse to send audio to a Cadence server. There still is not one.
+
+## TCC is bound to the code signature, not the bundle ID
+
+Ad\-hoc signing (`CODE_SIGN_IDENTITY: "-"`) produces a **new cdhash every rebuild**. Accessibility and Input Monitoring grants then silently die. Settings can still show Cadence ON because that row is the previous binary.
+
+Fix: stable self\-signed identity **Cadence Local Dev**, created by `scripts/setup-signing.sh`. `project.yml` sets `CODE_SIGN_STYLE: Manual` and `CODE_SIGN_IDENTITY: "Cadence Local Dev"`.
+
+Inspect what TCC actually keyed:
+
+```bash
+codesign -d -r- /Applications/Cadence.app
+```
+
+Shape:
+
+```
+designated => identifier "com.cadence.dictation" and certificate leaf = H"…"
+```
+
+The leaf is the Cadence Local Dev certificate on this Mac. A teammate who ran `setup-signing.sh` gets a different leaf. Do not export that identity. Team installs use Developer ID, not this cert.
+
+Put the app at `/Applications/Cadence.app` so the Privacy row matches the binary people launch. Mixing DerivedData and `/Applications` looks like "permissions are ON but Fn does nothing."
+
+## Hardened Runtime without the microphone entitlement lies
+
+Enabling Hardened Runtime without `com.apple.security.device.audio-input` made System Settings show Microphone **ON** while `AVCaptureDevice.authorizationStatus` stayed `.notDetermined`. Relaunch did not help. The process was not entitled to the device.
+
+Both `WisprFlowAlt.entitlements` and `CompareLab.entitlements` now contain only that key. Do not "fix" mic issues by adding the App Sandbox. Trust the API status, not the Settings toggle. If status is `.denied`, `PermissionService.relaunchApp()` exists because macOS sometimes keeps `.denied` on the live process after the user flips the switch.
+
+## Xcode's debug\-dylib split needs a Team ID
+
+A Team\-ID\-less self\-signed leaf cannot satisfy Xcode's debug dylib (executable and dylib must share a team). The process failed to launch or the debugger refused to load.
+
+Fix already in `project.yml`: `ENABLE_DEBUG_DYLIB: NO`.
+
+`xcodebuild test` injects Apple\-signed `XCTest.framework` into that same host. Hardened Runtime library validation then fails with "different Team IDs" even when both Cadence and the `.xctest` are `Cadence Local Dev` with `TeamIdentifier=not set`. Debug signs with `WisprFlowAlt.debug.entitlements`, which includes `com.apple.security.cs.disable-library-validation`. Release stays audio\-input only. XcodeGen `entitlements.properties` must keep `device.audio-input` or `xcodegen generate` writes an empty plist.
+
+## Never `tccutil reset` from Debug UI
+
+Resetting Accessibility or Input Monitoring **deletes the grant the user just gave**. Fn dies until they find the toggle again. `PermissionService` must not shell out to `tccutil`. Open the Settings pane and prompt with `AXIsProcessTrustedWithOptions` / `CGRequestListenEventAccess`. If the row is stale, the copy tells them to remove Cadence and drag `/Applications/Cadence.app` back in.
+
+## `CGEvent` tap on the main run loop times out and swallows Fn
+
+A listen tap whose callback is slow to return is disabled (`tapDisabledByTimeout`), often dozens of times per session. On the main run loop it competes with SwiftUI, speech, and polish. Fn then vanishes with no UI.
+
+### What the tap does now
+
+* Dedicated thread `com.cadence.hotkey-tap` with its own run loop
+* `listenOnly` (a default tap at headInsert can freeze the UI and eat keys)
+* Re\-enable on `tapDisabledByTimeout` / `tapDisabledByUserInput`
+* 2s watchdog if disable happens with no event
+* `NSEvent.addGlobalMonitorForEvents` fallback
+* `isPTTDown` so tap \+ monitor do not double\-fire
+
+Hands\-free double\-tap defaults **off**. Fn `flagsChanged` often looks like a double\-tap and left Cadence in hands\-free while the user thought push\-to\-talk was broken.
+
+## `NSPanel.isFloatingPanel = true` resets window level to 3
+
+That is `.floating`. Fullscreen Electron / Cursor sit above it. The Flow Bar disappears.
+
+Set floating **first**, then overlay level `CGWindowLevelForKey(.assistiveTechHighWindow) + 1`. Keep `fullScreenAuxiliary` and `canJoinAllSpaces`. Draw the bar in AppKit (`FlowBarCanvas`), not a SwiftUI window that loses the level war.
+
+## Electron paste
+
+macOS discards synthesized `⌘V` unless the posting process is trusted for Accessibility. Clipboard\-only without AX is "text is on the pasteboard, user pastes." Do not log `Inject OK` in that state.
+
+Do not post `⌘V` twice (pid **and** HID tap). Electron reads the window\-server stream, so HID is preferred when the target is actually frontmost. Otherwise `postToPid`. Track the last **non\-Cadence, non\-system** frontmost app continuously. Capture it **before** the HUD, or Studio becomes the target and paste goes nowhere.
+
+Wait for Fn/Option to clear before sending `⌘V` or you chord the paste.
+
+Terminal and iTerm default to clipboard. Cursor and VS Code are seeded the same way. AX value writes on Electron composers are a last resort.
+
+## SpeechAnalyzer live mic
+
+File STT (Compare's `AppleEngine`, `scripts/apple_speech_transcribe.swift`) is not the product path.
+
+Live path rules:
+
+* `analyzer.start(inputSequence:)` **before** installing the mic tap and yielding buffers
+* `AVAudioConverter.primeMethod = .none` or the stream is primed with silence/junk
+* Do not reset the audio meter at finalize. Reset on cancel / HUD hide only
+* SpeechTranscriber emits revisions of the same utterance. Absorb them (`TranscriptStitcher.absorbRevision` on the file path; volatile replace \+ final segments on the live path). Concatenating every callback duplicates "the the the" hypotheses
+
+`SpeechEngine.cancel()` resets the meter. `stopAndFinalize()` does not. Keep it that way.
+
+## Dictionary: whole\-phrase `\b` matching
+
+Substring replace turns `ai` into a landmine (`said` → `sAId` or worse). `TextNormalizer.applyDictionary` uses `\b` around the escaped phrase, longest phrase first, case\-insensitive unless the entry says otherwise. Seed `CorporateAIDictionary` (v2) for spoken "a i" → `AI`, "push to talk" → `push-to-talk`, and the usual corporate/ASR mishears. Re\-seed is idempotent per phrase.
+
+## Window restoration freezes the chrome
+
+After a crash during restore, AppKit shows a modal "Do you want to try to reopen its windows again?" alert. If that alert is off the active Space, Cadence looks frozen. Close, minimize, and Settings do nothing. The main thread is idle.
+
+Do not set `collectionBehavior` to `moveToActiveSpace` on a SwiftUI `Window`. That combination with `fullScreenNone` throws in `_validateCollectionBehavior:` and aborts.
+
+`CadenceAppDelegate` returns false for restore and save. Studio uses `.restorationBehavior(.disabled)`.
+
+Onboarding keeps a titled window. A hidden title bar made `kAXWindowsAttribute` return the application instead of windows, so Continue and Finish had no AX targets. `openWindow` from the menu extra does not present a Window scene. Call `CadenceWindowSpace.revealOnboarding()` from a real window, the same way Studio is revealed. Do not assign `collectionBehavior`.
+
+Launch presents only the wizard when `settings.hasCompletedOnboarding` is false. Finish opens Studio from the onboarding window. Do not present Studio and Onboarding in the same launch.
+
+## Related, also true
+
+* Cadence is not sandboxed and not Mac App Store. Team share is a notarized Developer ID DMG. See [DISTRIBUTION.md](DISTRIBUTION.md).
+* Do not share Debug DerivedData builds, login\-keychain certs, or TCC databases.
+* Compare Lab's Wispr column can upload audio if someone pastes an API key. That is opt\-in comparison, not Cadence dictation.
+</pre>
+<h1 id='ADR 0003'>ADR 0003</h1><pre># ADR 0003: Stable local signing for TCC
+
+## Status
+
+Accepted.
+
+## Context
+
+macOS TCC binds Accessibility and Input Monitoring to the app's **code signature**. Ad\-hoc signing (`CODE_SIGN_IDENTITY: "-"`) changes the cdhash on every Xcode build. Grants vanish. Settings still shows the old row as ON. Fn and auto\-paste look randomly broken.
+
+Xcode's debug\-dylib split also refuses to load when the executable and the dylib have no Team ID, which a self\-signed leaf cannot provide.
+
+## Decision
+
+* Local Debug uses a stable self\-signed identity **Cadence Local Dev** (`scripts/setup-signing.sh`).
+* `project.yml`: `CODE_SIGN_STYLE: Manual`, `CODE_SIGN_IDENTITY: "Cadence Local Dev"`, `DEVELOPMENT_TEAM: ""`, `ENABLE_DEBUG_DYLIB: NO`.
+* Developers grant Mic / AX / Input Monitoring once against `/Applications/Cadence.app` (or one stable signed copy).
+* Team installs use Developer ID, not this identity. Do not share the login keychain cert or a `.p12`.
+* Debug UI must never `tccutil reset` those services.
+
+Designated requirement shape: `identifier "com.cadence.dictation" and certificate leaf = H"…"`. The leaf is the Cadence Local Dev certificate on this Mac. Other machines differ.
+
+## Consequences
+
+* First clone needs `./scripts/setup-signing.sh` before a useful Debug run.
+* Each developer has their own leaf. TCC does not travel with the repo.
+* Release signing in `scripts/notarize.sh` overrides to `CODE_SIGN_STYLE=Automatic` \+ `DEVELOPMENT_TEAM`. That is intentional.
+</pre>

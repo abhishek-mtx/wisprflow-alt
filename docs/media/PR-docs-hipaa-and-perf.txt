@@ -1,0 +1,14 @@
+HIPAA hits (not-certified only):
+SECURITY.md:5:Cadence is **not** HIPAA certified. On\-device recognition is not the same as a compliance program.
+README.md:23:The microphone hears you. If you grant Accessibility, Cadence can insert text into other apps. That is the product, not a side effect. Cadence is **not** HIPAA certified and does not claim to be. If the rule is "no process on this Mac may hear or type," do not run dictation software.
+docs/media/docs-preview.html:40:The microphone hears you. If you grant Accessibility, Cadence can insert text into other apps. That is the product, not a side effect. Cadence is **not** HIPAA certified and does not claim to be. If the rule is "no process on this Mac may hear or type," do not run dictation software.
+docs/media/docs-preview.html:137:Cadence is **not** HIPAA certified. On\-device recognition is not the same as a compliance program.
+docs/adr/0001-local-on-device-dictation.md:24:Be explicit in docs and UI: the mic hears you; Accessibility can type into other apps. That is the product. Do not claim HIPAA certification.
+docs/DISTRIBUTION.md:17:Accessibility inserting into other apps is the product. Microphone hearing speech is the product. Cadence is not HIPAA certified.
+
+README bytes:     6182
+
+git status ignored:
+!! .sf/
+!! DerivedData/
+!! scripts/.venv-parakeet/

@@ -1,0 +1,21 @@
+CodeSign /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Cadence.app (in target 'WisprFlowAlt' from project 'WisprFlowAlt')
+    cd /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt
+    
+    Signing Identity:     "Cadence Local Dev"
+    
+    /usr/bin/codesign --force --sign ABD902B78B8EAB5B51791E0EDFCDC17F8BBCA719 --options runtime --entitlements /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Intermediates.noindex/WisprFlowAlt.build/Debug/WisprFlowAlt.build/Cadence.app.xcent --timestamp\=none --generate-entitlement-der /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Cadence.app
+
+Validate /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Cadence.app (in target 'WisprFlowAlt' from project 'WisprFlowAlt')
+    cd /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt
+    builtin-validationUtility /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Cadence.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Cadence.app (in target 'WisprFlowAlt' from project 'WisprFlowAlt')
+    cd /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt
+    /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Cadence.app
+
+** BUILD SUCCEEDED **
+
+real 2.89
+user 0.41
+sys 0.32
+real 2.89 (incremental Debug, no trunk to interleave)

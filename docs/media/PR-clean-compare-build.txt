@@ -1,0 +1,15 @@
+
+Validate /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Compare.app (in target 'CompareLab' from project 'WisprFlowAlt')
+    cd /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt
+    builtin-validationUtility /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Compare.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+Touch /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Compare.app (in target 'CompareLab' from project 'WisprFlowAlt')
+    cd /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt
+    /usr/bin/touch -c /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Compare.app
+
+RegisterWithLaunchServices /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Compare.app (in target 'CompareLab' from project 'WisprFlowAlt')
+    cd /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt
+    /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/abhishek.simgekar/Documents/Projects/WisprFlow\ Alt/DerivedData/Build/Products/Debug/Compare.app
+
+** BUILD SUCCEEDED **
+

@@ -1,0 +1,11 @@
+scripts/verify-plan-done.sh ran 2026-08-28 from the repo root. Exit 0.
+
+PASS README fence
+PASS git add -An has no home path
+PASS Studio live: size=360x552 settingsOpen=2 afterClose=0 afterOpen=1
+Recent takes heading plus five clocked rows, newest first:
+Cadence dictation, complete probe, 123.
+Is it working right now?
+Are you aware of Gronkboard? Do what it does?
+crockpot / company data take
+I think I'm really trying...
