@@ -100,11 +100,11 @@ Do not set `collectionBehavior` to `moveToActiveSpace` on a SwiftUI `Window`. Th
 
 `CadenceAppDelegate` returns false for restore and save. Studio uses `.restorationBehavior(.disabled)`.
 
-MenuBarExtra can switch the app to accessory activation. Then Studio is visible but never key, clicks fall through, and `kAXWindowsAttribute` is empty. Force `NSApp.setActivationPolicy(.regular)` on launch.
+SwiftUI `MenuBarExtra` nests an `AXApplication` under Cadence and can switch the app to accessory. Then `kAXWindowsAttribute` is the nested app, System Events reports zero windows, and close/Settings get no AXPress. Studio can still be on screen in `CGWindowList`. Use an AppKit `NSStatusItem` instead.
 
-Onboarding keeps a titled window. A hidden title bar made `kAXWindowsAttribute` return the application instead of windows, so Continue and Finish had no AX targets. `openWindow` from the menu extra does not present a Window scene. Call `CadenceWindowSpace.revealOnboarding()` from a real window, the same way Studio is revealed. Do not assign `collectionBehavior`.
+Titled chrome must use `sharingType = .readWrite`. With the default `readOnly` sharing, `NSApp.accessibilityWindows()` was empty and the AX server listed each window slot as `AXApplication`. Do not call `NSApp.setAccessibilityWindows`, `setAccessibilityElement(true)`, or `setAccessibilityParent(NSApp)` on titled chrome.
 
-Launch presents only the wizard when `settings.hasCompletedOnboarding` is false. Finish opens Studio from the onboarding window. Do not present Studio and Onboarding in the same launch. Skip the MenuBarExtra `Item-0` window. Do not call `setAccessibilityElement(true)` on titled chrome. That made `kAXWindowsAttribute` return the application.
+Force `NSApp.setActivationPolicy(.regular)` on launch so the app is not accessory. Onboarding keeps a titled window. A hidden title bar also made `kAXWindowsAttribute` return the application. Finish opens Studio from the onboarding window. Do not present Studio and Onboarding in the same launch. Do not call `openWindow(id: "studio")` when a Cadence window already exists. Do not assign `collectionBehavior`. `xcodebuild test` launches a second Cadence host. Relaunch `/Applications/Cadence.app` before trusting AX after tests.
 
 ## Related, also true
 
