@@ -21,7 +21,6 @@
 		5B8127B185DE2123D4B318BA /* SpeechCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05F4E013BE2857FF83B4B15 /* SpeechCompat.swift */; };
 		5D0AAF3C1680939043261383 /* AudioMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8601CDE57CA33A337DC5084C /* AudioMeter.swift */; };
 		5D777BEB765DE276EF28845C /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81815E5E19CB06DC646D642 /* DataModels.swift */; };
-		5FC803C95C4ACB7DFD68BBE4 /* RecentTakesStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39EEDF8FF897AC4C364EEE30 /* RecentTakesStrip.swift */; };
 		66C75DBBB9310E86CE64CF9D /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BD8EFDB01A71918FB74DD8 /* DictionaryView.swift */; };
 		688ADC692FC1221E701C4F96 /* CompareSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5349C4B8F41B6E47619E1756 /* CompareSync.swift */; };
 		713EAFABA9CCB8299AD104D8 /* HotkeySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA29EAC542D3D3510FA740C /* HotkeySettingsView.swift */; };
@@ -54,7 +53,6 @@
 		D2A0D493C960E3CD8FC2D1B1 /* CompareRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260A4F4780BB7D3B9D1B2A55 /* CompareRootView.swift */; };
 		D5D5BC0D753F5C9D1C33B5B6 /* TextInjectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A0FD378A8981B31012CCF /* TextInjectionService.swift */; };
 		D6213836952B7B0679AE156A /* DictationPolish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC1F9ED863F2DEC552AFBA /* DictationPolish.swift */; };
-		D63A2A3E746F9BB316757189 /* RecentTakesStripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C3208580E842530EB2EC9 /* RecentTakesStripTests.swift */; };
 		DDC807A55793E0337B478CE1 /* AppleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51B8978FF78EF0BFF25030C /* AppleEngine.swift */; };
 		E15E207175ABF92D9F725D70 /* ClipRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93E432C418759173C8EE33 /* ClipRecorder.swift */; };
 		E5F61287E505E177FB0711EC /* parakeet_sidecar.py in Resources */ = {isa = PBXBuildFile; fileRef = 683FA96F7FCD6BC116C1C2BD /* parakeet_sidecar.py */; };
@@ -96,7 +94,6 @@
 		32364B445C016CAB3239E5BD /* CadenceWindowSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceWindowSpace.swift; sourceTree = "<group>"; };
 		37171A6B431B984A6F34A926 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		375E6F9CB0879BD4AF508D9A /* WisprFlowAltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WisprFlowAltApp.swift; sourceTree = "<group>"; };
-		39EEDF8FF897AC4C364EEE30 /* RecentTakesStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTakesStrip.swift; sourceTree = "<group>"; };
 		3C324B3F83D76DD711CF3248 /* CadenceStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStudioView.swift; sourceTree = "<group>"; };
 		40554CD23A0ED0FF983F688A /* FoundationModelsPolish.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelsPolish.swift; sourceTree = "<group>"; };
 		4F5578928CEA85AAC3BC8D77 /* WisprFlowAlt.debug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WisprFlowAlt.debug.entitlements; sourceTree = "<group>"; };
@@ -112,7 +109,6 @@
 		77F07A281D6F249AB7D31121 /* WisprFlowAlt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WisprFlowAlt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79A6CE31A1F725150E0C1527 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		8601CDE57CA33A337DC5084C /* AudioMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMeter.swift; sourceTree = "<group>"; };
-		894C3208580E842530EB2EC9 /* RecentTakesStripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTakesStripTests.swift; sourceTree = "<group>"; };
 		904021D425D41321E7E92E4A /* StylesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylesView.swift; sourceTree = "<group>"; };
 		9093D89CAF0CB300355CC8F1 /* OverlayHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayHUD.swift; sourceTree = "<group>"; };
 		915B1E239EB775EAF0CE17A9 /* PostProcessPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostProcessPipeline.swift; sourceTree = "<group>"; };
@@ -246,7 +242,6 @@
 				3C324B3F83D76DD711CF3248 /* CadenceStudioView.swift */,
 				176C866F357EBA27566D5DFD /* DictationSessionController.swift */,
 				9093D89CAF0CB300355CC8F1 /* OverlayHUD.swift */,
-				39EEDF8FF897AC4C364EEE30 /* RecentTakesStrip.swift */,
 			);
 			path = Dictation;
 			sourceTree = "<group>";
@@ -383,7 +378,6 @@
 		EC7F801C43163CA4836D52C3 /* WisprFlowAltTests */ = {
 			isa = PBXGroup;
 			children = (
-				894C3208580E842530EB2EC9 /* RecentTakesStripTests.swift */,
 				108C047CFF40DA7533BB24D7 /* TextNormalizerTests.swift */,
 			);
 			path = WisprFlowAltTests;
@@ -595,7 +589,6 @@
 				8BC3D885AAA4FBEC4ED1804F /* OverlayHUD.swift in Sources */,
 				BFC84FB4B89F8293F06139F0 /* PermissionService.swift in Sources */,
 				B7DB1990C92D9AFBAF9580C7 /* PostProcessPipeline.swift in Sources */,
-				5FC803C95C4ACB7DFD68BBE4 /* RecentTakesStrip.swift in Sources */,
 				C533F989CC797C464F7170B7 /* SeedData.swift in Sources */,
 				98A921E376FA9AB54E9589F8 /* SettingsView.swift in Sources */,
 				56CE685D39A4AE5C05358288 /* SnippetsView.swift in Sources */,
@@ -614,7 +607,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D63A2A3E746F9BB316757189 /* RecentTakesStripTests.swift in Sources */,
 				0BC0D7ECAF1770407D4CEC89 /* TextNormalizerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
