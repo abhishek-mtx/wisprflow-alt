@@ -29,19 +29,10 @@ struct CadenceStudioView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            Group {
-                if isListening || isBusy {
-                    Text(appModel.speech.partialTranscript.isEmpty ? "Listening…" : appModel.speech.partialTranscript)
-                } else if appModel.session.lastInjectedText.isEmpty {
-                    Text("No takes yet")
-                } else {
-                    Text(appModel.session.lastInjectedText)
-                        .lineLimit(4)
-                }
-            }
-            .font(.body)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
+            RecentTakesStrip(
+                livePartial: appModel.speech.partialTranscript,
+                isLive: isListening || isBusy
+            )
 
             listenButton
 
