@@ -1,0 +1,3 @@
+!! .sf/
+!! DerivedData/
+!! scripts/.venv-parakeet/

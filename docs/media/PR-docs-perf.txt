@@ -1,0 +1,4 @@
+Trunk (main 8bd3b24): README.md absent. wc -c = 0
+Head (pr-docs 6f648ee): wc -c README.md = 6182
+Working tree copy: 6182
+Rule (head may grow by at most 4000 bytes) assumes a trunk README. Against empty main the whole file is the delta. The fence is one Features bullet plus the What stays on this Mac section, not a second essay. Do not check the 4000-byte rule as PASS or FAIL against a missing trunk file.

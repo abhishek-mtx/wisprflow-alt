@@ -1,0 +1,13 @@
+CadenceProbe bundle com.cadence.dictation.probe, store name CadenceProbe, not copied to /Applications.
+Built from /tmp/cadence-probe-2026 at freeze head with sharingType readWrite. Launched after quitting /Applications/Cadence.app.
+
+Log:
+2026-08-28T00:55:57Z [INFO] Permissions changed mic=true tcc=authorized ax=false input=false
+2026-08-28T00:55:57Z [INFO] Input Monitoring preflight=false request=false
+2026-08-28T00:55:57Z [ERROR] Input Monitoring denied — Fn will not register until it is granted
+2026-08-28T00:55:57Z [DEBUG] Bootstrap complete hotkeysRunning=true mic=true ax=false input=false
+
+AX kAXWindowsAttribute is AXWindow title=Cadence. Settings window General is open.
+Input Monitoring row shows the denied help string. That string is only drawn when inputMonitoringTrusted is false. The row is not a green check.
+
+Screen Recording TCC blocked PNG. Probe quit. /Applications/Cadence.app restored.

@@ -1,0 +1,8 @@
+Trunk (main 8bd3b24): no WisprFlowAlt.xcodeproj. Cadence scheme does not exist. Cannot record a trunk real-seconds baseline.
+Head (pr-clean d7353e4): /usr/bin/time -p xcodebuild ... build
+** BUILD SUCCEEDED **
+real 8.10
+user 0.47
+sys 0.20
+First pr-clean head 3862af3 failed to build. pbxproj still listed RecentTakesStrip.swift after that file was withheld for PR-recent. Regenerated project. New head d7353e4.
+Rule (head <= trunk * 1.15) cannot be applied. Trunk has no Cadence target.

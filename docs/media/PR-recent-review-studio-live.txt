@@ -1,0 +1,6 @@
+After click Listen. Window still 360x552. Hold Fn still visible.
+Listening… (status)
+Listening (heading)
+Listening (live row)
+then four saved takes; oldest of five omitted while live.
+Stop help=Stop. Silence finalize. No extra store row.
