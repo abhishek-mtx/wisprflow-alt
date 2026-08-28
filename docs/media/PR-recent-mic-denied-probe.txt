@@ -1,8 +1,14 @@
-Same CadenceProbe launch as PR-clean-im-denied-probe.txt, rebuilt at the freeze head.
+CadenceMicProbe bundle com.cadence.dictation.micprobe0828, store name CadenceMicProbe, not copied to /Applications.
+Built from pr-recent 79ec81a. Same Cadence Local Dev cert. New bundle id so Microphone TCC is notDetermined without tccutil reset.
+Launched from /tmp/cadence-micprobe after quitting /Applications/Cadence.app.
 
-2026-08-28T00:55:57Z Bootstrap complete hotkeysRunning=true mic=true ax=false input=false
+Log:
+2026-08-28T01:47:47Z [INFO] Permissions changed mic=false tcc=notDetermined ax=false input=false
+2026-08-28T01:47:47Z [DEBUG] Bootstrap complete hotkeysRunning=true mic=false ax=false input=false
 
-Studio AX: Ready, Recent takes, No takes yet, Hold Fn to dictate, Cadence.
-Allow Microphone is not on the tree because Cadence Local Dev already has Microphone for this signing identity.
+Studio AX size 360x552. Window role AXWindow title Cadence.
+Visible copy: Microphone needed, Recent takes, No takes yet, Allow Microphone (button), Hold Fn to dictate.
+Strip remains as the empty-state line. Listen button still in the tree.
+Screen Recording TCC blocked PNG.
 
-Do not tccutil reset Microphone. Lane 8 stays open.
+Probe quit. /Applications/Cadence.app restored. verify-plan-done.sh PASS.

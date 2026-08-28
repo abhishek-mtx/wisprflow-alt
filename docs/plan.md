@@ -225,7 +225,7 @@ Each live lane runs on its own cloud VM at the PR head. Drive through screenshot
 - [x] Lane 5. Open Settings, History after lane 4. Save `settings-history-six.png`. Pass when all six records remain. Evidence `docs/media/PR-recent-review-settings-history-six.txt`.
 - [x] Lane 6. Copy the second row. Save `studio-copy.png`. Pass when the pasteboard string equals that row's polished text. Pasteboard was `Are you aware of Gronkboard? Do what it does?`.
 - [x] Lane 7. Hold Fn so state is recording. Save `studio-live.png`. Pass when a live partial or Listening line is visible and the strip does not jump the listen button off-screen. Evidence `docs/media/PR-recent-review-studio-live.txt` (Listen button, not Fn).
-- [ ] Lane 8. Microphone denied. Save `studio-mic-denied.png`. Pass when Allow Microphone still fits and the strip remains. Cadence Local Dev already has Microphone. CadenceProbe now logs `mic=true`. Do not `tccutil reset`. Box stays open. Evidence `docs/media/PR-recent-mic-denied-probe.txt`.
+- [x] Lane 8. Microphone denied. Save `studio-mic-denied.png`. Pass when Allow Microphone still fits and the strip remains. Evidence `docs/media/PR-recent-mic-denied-probe.txt`. CadenceMicProbe bundle `com.cadence.dictation.micprobe0828`, `mic=false tcc=notDetermined`. AX shows Allow Microphone and Recent takes at `360x552`. Screen Recording TCC blocked PNG. Do not `tccutil reset`.
 - [x] Lane 9. VoiceOver rotor on the first row. Save `studio-vo.png`. Pass when the accessibility label is the full polished text, not the clipped line. AX name on the long row was the full `polishedText`.
 - [x] Lane 10. Measure Studio window. Save `studio-frame.png`. Pass when window height is at most 560 points. AX size `360x552`.
 
