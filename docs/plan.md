@@ -102,7 +102,7 @@ Each live lane runs on its own cloud VM at the PR head. Drive through screenshot
 - [x] Lane 1. Open brand-board in a browser. Save `brand-fn.png`. Pass when the visible shortcut is Fn. Evidence `docs/media/PR-clean-brand-fn.png`.
 - [x] Lane 2. Open onboarding to the last step. Save `onboarding-handsfree.png`. Pass when the text says double-tap is optional and off by default. Evidence `docs/media/PR-clean-onboarding-handsfree.txt` (AX). Screen Recording TCC blocked PNG.
 - [x] Lane 3. Toggle hands-free in Settings, Hotkeys. Save `hotkeys-toggle.png`. Pass when `cadence.debug.log` has a new `Hotkeys configured` line after the click. Evidence `docs/media/PR-clean-hotkeys-toggle.txt`.
-- [ ] Lane 4. Settings, Permissions with Input Monitoring denied and tap running. Save `input-monitoring-row.png`. Pass when the row is not a green check.
+- [x] Lane 4. Settings, Permissions with Input Monitoring denied and tap running. Save `input-monitoring-row.png`. Pass when the row is not a green check. Evidence `docs/media/PR-clean-im-denied-probe.txt`. CadenceProbe `hotkeysRunning=true input=false`. AX shows the denied help string. Screen Recording TCC blocked PNG.
 - [ ] Lane 5. Trigger inject with no target app. Save `inject-copy.png`. Pass when the HUD or error does not say Cursor as the only app.
 - [x] Lane 6. `xcodegen generate` then diff `project.pbxproj` for `parakeet_sidecar.py`. Save `pbxproj-sidecar.png`. Pass when the sidecar is a CompareLab resource. Evidence `docs/media/PR-clean-pbxproj-sidecar.txt`.
 - [x] Lane 7. Build Cadence Debug. Save `cadence-build.png`. Pass when `BUILD SUCCEEDED`. Evidence `docs/media/PR-clean-cadence-build.txt`.
@@ -112,10 +112,10 @@ Each live lane runs on its own cloud VM at the PR head. Drive through screenshot
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Debug build wall time of the Cadence scheme.
-- [ ] Probe. `/usr/bin/time -p xcodebuild -project WisprFlowAlt.xcodeproj -scheme Cadence -configuration Debug -derivedDataPath DerivedData build` at trunk and at the head, interleaved.
-- [ ] Baseline. Record the trunk real seconds first.
-- [ ] Rule. Head real seconds must be at most trunk times 1.15. Fail if head is slower than that.
+- [ ] Metric. Debug build wall time of the Cadence scheme. Head real 7.81s. Trunk has no Cadence scheme. Evidence `docs/media/PR-clean-perf-vs-trunk.txt`.
+- [ ] Probe. `/usr/bin/time -p xcodebuild -project WisprFlowAlt.xcodeproj -scheme Cadence -configuration Debug -derivedDataPath DerivedData build` at trunk and at the head, interleaved. Trunk `origin/main` has no `WisprFlowAlt.xcodeproj`.
+- [ ] Baseline. Record the trunk real seconds first. Missing.
+- [ ] Rule. Head real seconds must be at most trunk times 1.15. Fail if head is slower than that. Cannot apply. Do not check.
 
 **Review gate.** None. PR-clean is not review-gated.
 
@@ -170,10 +170,10 @@ Each live lane runs on its own cloud VM at the PR head. Drive through screenshot
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. README byte size.
-- [ ] Probe. `wc -c README.md` at trunk and at the head, interleaved.
-- [ ] Baseline. Record the trunk byte count first.
-- [ ] Rule. Head may grow by at most 4000 bytes. Fail if the fence adds a second essay.
+- [ ] Metric. README byte size. Head 6182. Trunk README absent. Evidence `docs/media/PR-docs-perf-readme-wc.txt`.
+- [ ] Probe. `wc -c README.md` at trunk and at the head, interleaved. `git show origin/main:README.md` fails.
+- [ ] Baseline. Record the trunk byte count first. Missing.
+- [ ] Rule. Head may grow by at most 4000 bytes. Fail if the fence adds a second essay. 6182 vs 0 would fail the rule. Do not check by treating empty trunk as a free 4000.
 
 **Review gate.** None. PR-docs is not review-gated.
 
@@ -225,7 +225,7 @@ Each live lane runs on its own cloud VM at the PR head. Drive through screenshot
 - [x] Lane 5. Open Settings, History after lane 4. Save `settings-history-six.png`. Pass when all six records remain. Evidence `docs/media/PR-recent-review-settings-history-six.txt`.
 - [x] Lane 6. Copy the second row. Save `studio-copy.png`. Pass when the pasteboard string equals that row's polished text. Pasteboard was `Are you aware of Gronkboard? Do what it does?`.
 - [x] Lane 7. Hold Fn so state is recording. Save `studio-live.png`. Pass when a live partial or Listening line is visible and the strip does not jump the listen button off-screen. Evidence `docs/media/PR-recent-review-studio-live.txt` (Listen button, not Fn).
-- [ ] Lane 8. Microphone denied. Save `studio-mic-denied.png`. Pass when Allow Microphone still fits and the strip remains.
+- [ ] Lane 8. Microphone denied. Save `studio-mic-denied.png`. Pass when Allow Microphone still fits and the strip remains. Cadence Local Dev already has Microphone. CadenceProbe now logs `mic=true`. Do not `tccutil reset`. Box stays open. Evidence `docs/media/PR-recent-mic-denied-probe.txt`.
 - [x] Lane 9. VoiceOver rotor on the first row. Save `studio-vo.png`. Pass when the accessibility label is the full polished text, not the clipped line. AX name on the long row was the full `polishedText`.
 - [x] Lane 10. Measure Studio window. Save `studio-frame.png`. Pass when window height is at most 560 points. AX size `360x552`.
 

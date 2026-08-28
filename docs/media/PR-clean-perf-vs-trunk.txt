@@ -1,0 +1,11 @@
+PR-clean perf vs trunk, 2026-08-28.
+
+Head `affb1e6` / pr-clean `f137005`:
+/usr/bin/time -p xcodebuild -project WisprFlowAlt.xcodeproj -scheme Cadence -configuration Debug -derivedDataPath /tmp/cadence-perf-head build
+real 7.81
+
+Trunk origin/main `8bd3b24` tree is only .gitignore and scripts/.
+git show origin/main:WisprFlowAlt.xcodeproj/project.pbxproj
+fatal: path exists on disk, but not in origin/main
+
+No Cadence scheme on trunk, so the 1.15x rule cannot apply. Do not check the perf boxes.
