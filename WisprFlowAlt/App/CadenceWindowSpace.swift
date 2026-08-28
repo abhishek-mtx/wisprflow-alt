@@ -10,6 +10,9 @@ import SwiftUI
 /// Do not change `collectionBehavior`. Combining `moveToActiveSpace`
 /// with SwiftUI's `fullScreenNone` trips `NSWindow _validateCollectionBehavior:`
 /// and aborts.
+///
+/// Do not assign `sharingType`. `.readWrite` is deprecated and the setter
+/// drops chrome to none. Leave SwiftUI's default `.readOnly`.
 @MainActor
 enum CadenceWindowSpace {
     private static var observing = false
@@ -42,7 +45,7 @@ enum CadenceWindowSpace {
             seen.insert(id)
             if window.styleMask.contains(.titled) && window.frame.height >= 40 && window.title.hasPrefix("Item-") == false {
                 CadenceLog.debug(
-                    "Window id=\(ObjectIdentifier(window)) title=\(window.title) class=\(type(of: window)) canKey=\(window.canBecomeKey) visible=\(window.isVisible) size=\(Int(window.frame.width))x\(Int(window.frame.height))"
+                    "Window id=\(ObjectIdentifier(window)) title=\(window.title) class=\(type(of: window)) canKey=\(window.canBecomeKey) visible=\(window.isVisible) size=\(Int(window.frame.width))x\(Int(window.frame.height)) sharing=\(window.sharingType.rawValue) onSpace=\(window.isOnActiveSpace) num=\(window.windowNumber)"
                 )
             }
             pinChromeIfNeeded(window)
@@ -80,7 +83,12 @@ enum CadenceWindowSpace {
         window.isRestorable = false
         window.hidesOnDeactivate = false
         window.ignoresMouseEvents = false
-        window.sharingType = .readWrite
+        // SwiftUI chrome can sit on screen while the AX server still publishes
+        // the process as AXApplication. Announce the window so System Events
+        // can press Close and Settings on a fresh launch.
+        if window.windowNumber > 0 {
+            NSAccessibility.post(element: window, notification: .windowCreated)
+        }
     }
 
     private static func revealWindow(matching: (NSWindow) -> Bool) {
@@ -91,11 +99,12 @@ enum CadenceWindowSpace {
         if window.isMiniaturized {
             window.deminiaturize(nil)
         }
-        window.makeKeyAndOrderFront(nil)
+        // makeKeyAndOrderFront resets sharing. orderFrontRegardless does not.
         window.orderFrontRegardless()
         window.makeMain()
         window.makeKey()
-        CadenceLog.debug("reveal title=\(window.title) appActive=\(NSApp.isActive) canKey=\(window.canBecomeKey) key=\(window.isKeyWindow) main=\(window.isMainWindow)")
+        prepareChrome(window)
+        CadenceLog.debug("reveal title=\(window.title) appActive=\(NSApp.isActive) canKey=\(window.canBecomeKey) key=\(window.isKeyWindow) main=\(window.isMainWindow) sharing=\(window.sharingType.rawValue)")
     }
 
     static func startObserving() {
@@ -121,6 +130,16 @@ enum CadenceWindowSpace {
                 pinVisibleChrome()
             }
         }
+        center.addObserver(
+            forName: NSWindow.didBecomeKeyNotification,
+            object: nil,
+            queue: .main
+        ) { note in
+            let window = note.object as? NSWindow
+            Task { @MainActor in
+                pinChromeIfNeeded(window)
+            }
+        }
     }
 }
 
@@ -131,6 +150,9 @@ struct PinWindowToActiveSpace: NSViewRepresentable {
             CadenceWindowSpace.pinChromeIfNeeded(view.window)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            CadenceWindowSpace.pinChromeIfNeeded(view.window)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             CadenceWindowSpace.pinChromeIfNeeded(view.window)
         }
         return view
