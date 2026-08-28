@@ -40,7 +40,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### PR mechanics, for every PR
 
-- [ ] Open the PR ready, never draft, with `gh pr create` and `draft: false`, or with Graphite `gt` for a stack.
+- [x] Open the PR ready, never draft. GitHub `gh` is not logged in on this Mac. Opened Origin PRs with `origin pr create --status open`. PR-clean https://cursor.com/codebase/mtx-group-inc/wisprflow-alt/pull/1 head `d7353e4`. PR-docs https://cursor.com/codebase/mtx-group-inc/wisprflow-alt/pull/2 head `6f648ee`. PR-recent https://cursor.com/codebase/mtx-group-inc/wisprflow-alt/pull/3 head `34f0805`, base `pr-clean`.
 - [ ] Run the repo's lint and typecheck once before the PR-facing push. Push with hooks on.
 - [ ] Run `/deslop` before each commit and `/no-comments` before review.
 - [ ] Triage every Bugbot and security-reviewer comment per `../references/bugbot-triage.md`.

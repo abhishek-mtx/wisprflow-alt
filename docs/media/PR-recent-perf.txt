@@ -1,0 +1,6 @@
+Trunk Studio appear: not measured. main has no Cadence.app.
+Head log 2026-08-28T00:04:29Z Recent takes fetch count=5 +0ms
+fetchLimit=5 on TranscriptRecord. Does not scan the full History list on Studio appear.
+Rule (head <= trunk + 50ms) cannot be applied without a trunk first-paint baseline.
+xcodebuild test at pr-recent 34f0805: TEST SUCCEEDED
+scripts/verify-plan-done.sh: ALL FOUR DONE-WHEN CHECKS PASSED (Studio 360x552, settingsOpen=2, afterClose=0, afterOpen=1, five clock lines, README fence, git add -An no home path)
