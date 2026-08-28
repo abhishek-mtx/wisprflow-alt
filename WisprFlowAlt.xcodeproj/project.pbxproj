@@ -57,6 +57,7 @@
 		E15E207175ABF92D9F725D70 /* ClipRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93E432C418759173C8EE33 /* ClipRecorder.swift */; };
 		E5F61287E505E177FB0711EC /* parakeet_sidecar.py in Resources */ = {isa = PBXBuildFile; fileRef = 683FA96F7FCD6BC116C1C2BD /* parakeet_sidecar.py */; };
 		E6248093FE6DBBA42B7D468F /* CompareSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5349C4B8F41B6E47619E1756 /* CompareSync.swift */; };
+		E72DB433A3802E63A7634ABF /* CadenceStudioWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F4EB007922BA6EB1416427 /* CadenceStudioWindow.swift */; };
 		E7D41C7D7C393F383DAFF5D4 /* CorporateAIDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177C0A1AFE404C3ECA84CB72 /* CorporateAIDictionary.swift */; };
 		E896755C579A53889518D143 /* InjectionProfilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC72B47F3D5E558AAC16B7C /* InjectionProfilesView.swift */; };
 		EAB27EC0324455D30BAE0F2F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D3AFC50808ACE643F3B6E /* HistoryView.swift */; };
@@ -81,6 +82,7 @@
 		108C047CFF40DA7533BB24D7 /* TextNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizerTests.swift; sourceTree = "<group>"; };
 		118E3198B0BC1FE59FD559E9 /* KeyShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyShortcut.swift; sourceTree = "<group>"; };
 		1213233D314EA73325393C22 /* WisprFlowAlt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WisprFlowAlt.entitlements; sourceTree = "<group>"; };
+		12F4EB007922BA6EB1416427 /* CadenceStudioWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStudioWindow.swift; sourceTree = "<group>"; };
 		1508E48A48F3CA62B81FD147 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		176C866F357EBA27566D5DFD /* DictationSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationSessionController.swift; sourceTree = "<group>"; };
 		177C0A1AFE404C3ECA84CB72 /* CorporateAIDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorporateAIDictionary.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				FB30C69C6CA10E2622DA0FDD /* CadenceAppDelegate.swift */,
 				9AFBBE008E247D0046592CBC /* CadenceBrand.swift */,
 				3E63AA12384831825B81ECCB /* CadenceStatusItem.swift */,
+				12F4EB007922BA6EB1416427 /* CadenceStudioWindow.swift */,
 				32364B445C016CAB3239E5BD /* CadenceWindowSpace.swift */,
 				375E6F9CB0879BD4AF508D9A /* WisprFlowAltApp.swift */,
 			);
@@ -570,6 +573,7 @@
 				8B6329625545EFEB51968F21 /* CadenceLog.swift in Sources */,
 				D2DF101C7CD16196545CE1D2 /* CadenceStatusItem.swift in Sources */,
 				AD154DCDF8B1EC77FA7E5E4E /* CadenceStudioView.swift in Sources */,
+				E72DB433A3802E63A7634ABF /* CadenceStudioWindow.swift in Sources */,
 				1E6C112D0C444F16EFE0239E /* CadenceWindowSpace.swift in Sources */,
 				EB878F2004F3B2F453BB4875 /* CommandModeController.swift in Sources */,
 				688ADC692FC1221E701C4F96 /* CompareSync.swift in Sources */,
