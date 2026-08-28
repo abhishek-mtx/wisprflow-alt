@@ -1,0 +1,153 @@
+import AppKit
+import SwiftUI
+
+/// SwiftUI `Window` scenes restore onto a stale Space and can come back
+/// miniaturized. After a crash during restore, AppKit presents a modal
+/// "Do you want to reopen its windows again?" alert. If that alert is
+/// off the active Space, Cadence looks frozen: close, Settings, and the
+/// alert itself receive no clicks.
+///
+/// Do not change `collectionBehavior`. Combining `moveToActiveSpace`
+/// with SwiftUI's `fullScreenNone` trips `NSWindow _validateCollectionBehavior:`
+/// and aborts.
+@MainActor
+enum CadenceWindowSpace {
+    private static var observing = false
+
+    static func pinChromeIfNeeded(_ window: NSWindow?) {
+        guard let window else { return }
+        // Flow Bar is an NSPanel that ignores mouse. Leave it alone.
+        if window.ignoresMouseEvents { return }
+        // MenuBarExtra publishes a titled Item-0 window. Treating it as AX chrome
+        // makes kAXWindowsAttribute return the application instead of Studio.
+        if window.frame.height < 40 { return }
+        if window.title.hasPrefix("Item-") { return }
+        prepareChrome(window)
+        if window.isMiniaturized {
+            window.deminiaturize(nil)
+        }
+        // Closed SwiftUI scenes stay in NSApp.windows with isVisible false.
+        // orderFrontRegardless would resurrect Settings after the user closed it.
+        // Only pull chrome that is already showing, but on the wrong Space.
+        if window.isVisible && window.isOnActiveSpace == false {
+            window.orderFrontRegardless()
+        }
+        publishAccessibleWindows()
+    }
+
+    static func pinVisibleChrome() {
+        for window in NSApp.windows {
+            if window.styleMask.contains(.titled) && window.frame.height >= 40 && window.title.hasPrefix("Item-") == false {
+                CadenceLog.debug(
+                    "Window title=\(window.title) class=\(type(of: window)) canKey=\(window.canBecomeKey) canMain=\(window.canBecomeMain) key=\(window.isKeyWindow) main=\(window.isMainWindow) ignoresMouse=\(window.ignoresMouseEvents) size=\(Int(window.frame.width))x\(Int(window.frame.height))"
+                )
+            }
+            pinChromeIfNeeded(window)
+        }
+        publishAccessibleWindows()
+    }
+
+    static func revealStudio() {
+        revealWindow { window in
+            window.title == "Cadence" && window.styleMask.contains(.titled)
+        }
+    }
+
+    static func revealOnboarding() {
+        revealWindow { window in
+            window.identifier?.rawValue == "onboarding"
+        }
+    }
+
+    private static func publishAccessibleWindows() {
+        let chrome = NSApp.windows.filter { window in
+            window.styleMask.contains(.titled)
+                && window.frame.height >= 40
+                && window.title.hasPrefix("Item-") == false
+                && window.ignoresMouseEvents == false
+                && window.isVisible
+        }
+        for window in chrome {
+            window.setAccessibilityParent(NSApp)
+        }
+        NSApp.setAccessibilityWindows(chrome)
+        NSApp.setAccessibilityMainWindow(chrome.first)
+        CadenceLog.debug(
+            "AX publish chrome=\(chrome.count) titles=\(chrome.map(\.title).joined(separator: ",")) appWindows=\(NSApp.accessibilityWindows()?.count ?? -1)"
+        )
+    }
+
+    private static func prepareChrome(_ window: NSWindow) {
+        window.isRestorable = false
+        window.hidesOnDeactivate = false
+        window.ignoresMouseEvents = false
+        if window.styleMask.contains(.titled) {
+            window.setAccessibilityRole(.window)
+            window.setAccessibilitySubrole(.standardWindow)
+            if window.title.isEmpty == false {
+                window.setAccessibilityTitle(window.title)
+            }
+        }
+    }
+
+    private static func revealWindow(matching: (NSWindow) -> Bool) {
+        let window = NSApp.windows.first(where: matching)
+        guard let window else { return }
+        if window.ignoresMouseEvents { return }
+        prepareChrome(window)
+        if window.isMiniaturized {
+            window.deminiaturize(nil)
+        }
+        window.makeKeyAndOrderFront(nil)
+        window.orderFrontRegardless()
+        _ = window.makeMain()
+        window.makeKey()
+        publishAccessibleWindows()
+        CadenceLog.debug("reveal title=\(window.title) appActive=\(NSApp.isActive) canKey=\(window.canBecomeKey) key=\(window.isKeyWindow) main=\(window.isMainWindow)")
+    }
+
+    static func startObserving() {
+        guard observing == false else { return }
+        observing = true
+        let center = NotificationCenter.default
+        center.addObserver(
+            forName: Notification.Name("NSWindowDidBecomeVisibleNotification"),
+            object: nil,
+            queue: .main
+        ) { note in
+            let window = note.object as? NSWindow
+            Task { @MainActor in
+                pinChromeIfNeeded(window)
+            }
+        }
+        center.addObserver(
+            forName: NSApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                pinVisibleChrome()
+            }
+        }
+    }
+}
+
+struct PinWindowToActiveSpace: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView(frame: .zero)
+        DispatchQueue.main.async {
+            CadenceWindowSpace.pinChromeIfNeeded(view.window)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            CadenceWindowSpace.pinChromeIfNeeded(view.window)
+        }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+        guard let window = nsView.window else { return }
+        if window.isVisible && window.isOnActiveSpace == false {
+            CadenceWindowSpace.pinChromeIfNeeded(window)
+        }
+    }
+}

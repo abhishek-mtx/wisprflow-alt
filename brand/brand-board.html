@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadence — locked brand</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --deep: #15202b;
+      --slate: #2a3f52;
+      --teal: #40bab4;
+      --mist: #7a96b8;
+      --paper: #f3f1ec;
+      --ink: #0e1210;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Outfit", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    .hero {
+      min-height: 72vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(2rem, 5vw, 4.5rem);
+      color: #fff;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 70% 55% at 20% 70%, rgba(64, 186, 180, 0.35), transparent 55%),
+        radial-gradient(ellipse 55% 45% at 85% 25%, rgba(120, 150, 200, 0.3), transparent 50%),
+        linear-gradient(155deg, #1e2a38 0%, #2a3f52 48%, #15202b 100%);
+    }
+    .badge {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: clamp(3.8rem, 12vw, 7.5rem);
+      font-weight: 700;
+      letter-spacing: -0.055em;
+      line-height: 0.92;
+      margin-bottom: 1rem;
+      animation: rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .tagline {
+      font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+      max-width: 28rem;
+      opacity: 0.88;
+      animation: rise 0.85s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .cta-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+      animation: rise 0.85s 0.14s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .cta {
+      font-weight: 600;
+      padding: 0.85rem 1.35rem;
+      border-radius: 999px;
+    }
+    .cta.primary { background: var(--teal); color: #0e1a22; }
+    .cta.ghost {
+      outline: 1px solid rgba(255,255,255,0.45);
+      color: #fff;
+    }
+    .panel {
+      padding: clamp(1.75rem, 4vw, 3rem);
+      display: grid;
+      gap: 1.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    h3 {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(14,18,16,0.55);
+      margin-bottom: 0.75rem;
+    }
+    .menubar {
+      background: rgba(28, 28, 30, 0.92);
+      color: #f5f5f7;
+      border-radius: 10px;
+      padding: 0.55rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.82rem;
+    }
+    .mic {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: var(--teal);
+    }
+    .hud {
+      border-radius: 16px;
+      padding: 1rem 1.15rem;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(64, 186, 180, 0.35);
+      max-width: 22rem;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.12);
+    }
+    .hud .top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .swatches { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .swatch {
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: 10px;
+      border: 1px solid rgba(14,18,16,0.12);
+    }
+    .note {
+      grid-column: 1 / -1;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid rgba(14,18,16,0.1);
+      font-size: 0.95rem;
+      color: rgba(14,18,16,0.7);
+    }
+    .note strong { color: var(--ink); }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <p class="badge">Locked · Cadence × Alto palette</p>
+    <h1>Cadence</h1>
+    <p class="tagline">Speak in rhythm. Write with clarity. On‑device dictation that keeps your voice private.</p>
+    <div class="cta-row">
+      <span class="cta primary">Hold Fn to dictate</span>
+      <span class="cta ghost">Command mode</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div>
+      <h3>Menu bar</h3>
+      <div class="menubar">
+        <span class="mic"></span>
+        <strong>Cadence</strong>
+        <span style="opacity:0.45;margin-left:auto">Ready</span>
+      </div>
+    </div>
+    <div>
+      <h3>Listening HUD</h3>
+      <div class="hud">
+        <div class="top">
+          <span><span class="pulse"></span>Listening</span>
+          <span style="opacity:0.5">Push‑to‑talk</span>
+        </div>
+        <p>Make this email warmer and shorter…</p>
+      </div>
+    </div>
+    <div>
+      <h3>Palette</h3>
+      <div class="swatches">
+        <div class="swatch" style="background:#15202b"></div>
+        <div class="swatch" style="background:#2a3f52"></div>
+        <div class="swatch" style="background:#40bab4"></div>
+        <div class="swatch" style="background:#7a96b8"></div>
+        <div class="swatch" style="background:#f3f1ec"></div>
+      </div>
+    </div>
+    <div>
+      <h3>Type</h3>
+      <p style="font-size:1.65rem;font-weight:700;letter-spacing:-0.04em">Cadence</p>
+      <p style="margin-top:0.5rem;color:rgba(14,18,16,0.55);font-size:0.92rem">Outfit · slate &amp; teal from Alto</p>
+    </div>
+    <p class="note">
+      <strong>Decision:</strong> Product name is <strong>Cadence</strong>. Visual system is Alto’s slate/teal.
+      The Mac app menu bar, onboarding, and HUD now use this combo. When Xcode finishes installing, open the <strong>Cadence</strong> scheme and Run.
+    </p>
+  </section>
+</body>
+</html>

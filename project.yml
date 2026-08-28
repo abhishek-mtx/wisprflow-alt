@@ -1,0 +1,129 @@
+name: WisprFlowAlt
+options:
+  bundleIdPrefix: com.wisprflowalt
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    CODE_SIGNING_ALLOWED: YES
+    # TCC keys Accessibility / Input Monitoring grants to the code signature.
+    # Ad-hoc signing gets a fresh cdhash every build, so grants die on each rebuild.
+    # This self-signed leaf is stable, so permissions survive. See scripts/setup-signing.sh.
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "Cadence Local Dev"
+    DEVELOPMENT_TEAM: ""
+    OTHER_CODE_SIGN_FLAGS: "--options runtime"
+    # Xcode's debug-dylib split refuses to load when the executable and the dylib have
+    # no matching Team ID, which a self-signed leaf cannot provide.
+    ENABLE_DEBUG_DYLIB: NO
+targets:
+  WisprFlowAlt:
+    type: application
+    platform: macOS
+    sources:
+      - path: WisprFlowAlt
+        excludes:
+          - Resources/AppIcon.iconset
+      - path: Shared
+    resources:
+      - path: WisprFlowAlt/Resources/AppIcon.icns
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.cadence.dictation
+        PRODUCT_NAME: Cadence
+        PRODUCT_MODULE_NAME: WisprFlowAlt
+        INFOPLIST_FILE: WisprFlowAlt/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: WisprFlowAlt/Resources/WisprFlowAlt.entitlements
+        LD_RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_TESTABILITY: YES
+        # Dictation injectors need Accessibility + global hotkeys outside sandbox.
+        ENABLE_APP_SANDBOX: NO
+        OTHER_LDFLAGS: ["$(inherited)", "-framework", "Speech", "-framework", "FoundationModels"]
+      configs:
+        debug:
+          ENABLE_LIBRARY_VALIDATION: NO
+          CODE_SIGN_ENTITLEMENTS: WisprFlowAlt/Resources/WisprFlowAlt.debug.entitlements
+    info:
+      path: WisprFlowAlt/Resources/Info.plist
+      properties:
+        LSUIElement: false
+        LSApplicationCategoryType: public.app-category.productivity
+        NSMicrophoneUsageDescription: Cadence needs the microphone to transcribe your speech on-device.
+        NSSpeechRecognitionUsageDescription: Cadence uses on-device speech recognition. Audio stays on your Mac.
+        NSHumanReadableCopyright: Copyright © 2026 Cadence
+  WisprFlowAltTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: WisprFlowAltTests
+    dependencies:
+      - target: WisprFlowAlt
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.cadence.dictation.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Cadence.app/Contents/MacOS/Cadence"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+  CompareLab:
+    type: application
+    platform: macOS
+    sources:
+      - path: CompareLab
+        excludes:
+          - "**/*.py"
+          - "Resources/Assets.xcassets"
+      - path: Shared
+      - path: CompareLab/Resources/parakeet_sidecar.py
+        type: file
+        buildPhase: resources
+      - path: CompareLab/Resources/Assets.xcassets
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.cadence.compare
+        PRODUCT_NAME: Compare
+        PRODUCT_MODULE_NAME: CompareLab
+        INFOPLIST_FILE: CompareLab/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: CompareLab/Resources/CompareLab.entitlements
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_APP_SANDBOX: NO
+        OTHER_LDFLAGS: ["$(inherited)", "-framework", "Speech", "-framework", "FoundationModels"]
+    info:
+      path: CompareLab/Resources/Info.plist
+      properties:
+        LSApplicationCategoryType: public.app-category.developer-tools
+        NSMicrophoneUsageDescription: Compare records your voice once so Cadence, Parakeet, and Wispr Flow can transcribe the same clip.
+        NSSpeechRecognitionUsageDescription: Compare uses on-device speech recognition for the Cadence column.
+        NSHumanReadableCopyright: Copyright © 2026 Cadence
+    entitlements:
+      path: CompareLab/Resources/CompareLab.entitlements
+      properties:
+        com.apple.security.device.audio-input: true
+schemes:
+  Cadence:
+    build:
+      targets:
+        WisprFlowAlt: all
+        WisprFlowAltTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - WisprFlowAltTests
+  Compare:
+    build:
+      targets:
+        CompareLab: all
+    run:
+      config: Debug
